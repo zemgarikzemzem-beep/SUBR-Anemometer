@@ -1,0 +1,36 @@
+#include "spi.h"
+#include "gpio.h"
+
+void SPI1_Init(void){
+	RCC->APB2ENR|=RCC_APB2ENR_SPI1EN;
+//	RCC->AHB1ENR|=RCC_AHB1ENR_DMA1EN;
+	
+	GPIOA->MODER&=~0x0000CC00;
+	GPIOA->MODER|=((GPIO_MODE_ALTERNATE<<(5<<1))|(GPIO_MODE_ALTERNATE<<(7<<1)));
+	GPIOA->OTYPER|=((GPIO_OUTPUT_PUSHPULL<<5)|(GPIO_OUTPUT_PUSHPULL<<7));
+	GPIOA->OSPEEDR|=((GPIO_SPEED_FREQ_VERY_HIGH <<(5<<1))|(GPIO_SPEED_FREQ_VERY_HIGH <<(7<<1)));
+	GPIOA->AFR[0]|=0x50500000;
+	
+	SPI1->CR1=0;
+	SPI1->CR1|=((0b001<<SPI_CR1_BR_Pos)|SPI_CR1_MSTR|SPI_CR1_SSM|SPI_CR1_SSI|SPI_CR1_BIDIMODE|SPI_CR1_BIDIOE);//|SPI_CR1_CPHA|SPI_CR1_CPOL
+	SPI1->CR2=0x0000;
+	SPI1->CR2|=((0b0111<<SPI_CR2_DS_Pos)); //|SPI_CR2_FRXTH|SPI_CR2_NSSP
+	
+//	SPI1->CR2|=SPI_CR2_TXDMAEN;
+//	DMA1_CSELR->CSELR|=(0b0001<<DMA_CSELR_C3S_Pos);
+	
+	SPI1->CR1|=SPI_CR1_SPE;
+}
+
+inline void SPI1_Send_Byte(uint8_t b){
+//	DMA1_Channel1->CCR=0;
+//	DMA1_Channel1->CCR|=(DMA_CCR_MINC|DMA_CCR_DIR);
+//	DMA1_Channel1->CPAR=(uint32_t)(&(SPI1->DR));
+//	DMA1_Channel1->CMAR=(uint32_t)&b;
+//	DMA1_Channel1->CNDTR=sizeof(b);
+//	DMA1_Channel1->CCR|=DMA_CCR_EN;
+//	while((SPI1->SR&SPI_SR_BSY));
+	*(__IO uint8_t*)&(SPI1->DR)=b;   // фишка для записи одного байта в DR!!! || !(SPI1->SR&SPI_SR_TXE)
+	while((SPI1->SR&SPI_SR_BSY));
+}
+

@@ -1,0 +1,45 @@
+#include "i2c-dma.h"
+#include "gpio.h"
+
+void I2C1_DMA_Init(void){
+	RCC->APB1ENR1|=RCC_APB1ENR1_I2C1EN;
+	RCC->AHB1ENR|=RCC_AHB1ENR_DMA1EN;
+	RCC->CCIPR|=RCC_CCIPR_I2C1SEL_0;
+	
+	GPIOB->MODER&=~0x0000F000;           // (B6,B7) Alternate open drain high speed
+	GPIOB->MODER|=((GPIO_MODE_ALTERNATE<<(6<<1))|(GPIO_MODE_ALTERNATE<<(7<<1)));
+	GPIOB->OTYPER|=((GPIO_OUTPUT_OPENDRAIN<<6)|(GPIO_OUTPUT_OPENDRAIN<<7));
+	GPIOB->OSPEEDR|=((GPIO_SPEED_FREQ_VERY_HIGH<<(6<<1))|(GPIO_SPEED_FREQ_VERY_HIGH<<(7<<1)));
+	GPIOB->PUPDR|=((GPIO_PULL_NO<<(6<<1))|(GPIO_PULL_NO<<(7<<1)));
+	GPIOB->AFR[0]=0x44000000;
+	
+	I2C1->CR1=0;
+	I2C1->CR2=0;
+	I2C1->CR2|=I2C_CR2_AUTOEND;
+	I2C1->OAR1=I2C_OAR1_OA1EN;
+	I2C1->TIMINGR=0xB0420F13;  // RefMan стр. 1145 TIMINGR configuration examples
+	
+	I2C1->CR1|=I2C_CR1_TXDMAEN;
+	DMA1_CSELR->CSELR=(0b0011<<DMA_CSELR_C6S_Pos);
+}
+
+uint8_t buf[1]={0};
+
+void LCD_WriteByteI2CLCD (uint8_t b){
+	I2C1->CR1|=I2C_CR1_PE;
+	
+	buf[0]=b;
+	I2C1->CR2=0;
+	I2C1->CR2|=((0x4E<<(I2C_CR2_SADD_Pos))|(1<<I2C_CR2_NBYTES_Pos));  // 0x4E - адрес устройства
+	
+	DMA1_Channel6->CCR=0;
+	DMA1_Channel6->CPAR=(uint32_t)(&I2C1->TXDR);
+	DMA1_Channel6->CMAR=(uint32_t)buf;
+	DMA1_Channel6->CNDTR=sizeof(buf);
+	DMA1_Channel6->CCR|=(DMA_CCR_MINC|DMA_CCR_DIR);
+	DMA1_Channel6->CCR|=DMA_CCR_EN;
+	
+	I2C1->CR2|=I2C_CR2_START;
+	while(!(I2C1->ISR&I2C_ISR_TC));
+	I2C1->CR1&=~I2C_CR1_PE;
+}
