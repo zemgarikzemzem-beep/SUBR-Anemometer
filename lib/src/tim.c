@@ -59,7 +59,7 @@ void TIM2_IRQHandler(void){
 //		sprintf(tmp_str, "Ширина:%6d", pulse_width);
 //		TFT_Send_Str(10, 80, tmp_str, strlen(tmp_str), Font_11x18, RED, YELLOW);
 			
-			sprintf(tmp_str, "%2d В", (125-length)/4);
+			sprintf(tmp_str, "%5d В", (length<=1588)?((1588-length)/10+4):0);
 			TFT_Send_Str(50, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 			length=0;
 		}
@@ -81,10 +81,10 @@ void TIM1_Init(void){
 	GPIOA->AFR[1]|=(0b0110<<GPIO_AFRH_AFSEL8_Pos);
 	
 	RCC->APB2ENR|=RCC_APB2ENR_TIM1EN;
-	TIM1->PSC=SystemCoreClock/10000000-1;   // Prescaler = (f(APB1) / f) - 1
-	TIM1->ARR=250-1;   // Period 1000
+	TIM1->PSC=SystemCoreClock/100000000-1;   // Prescaler = (f(APB1) / f) - 1
+	TIM1->ARR=2500-1;   // Period 1000
 	TIM1->CR1=0;
-	TIM1->CCR1=125; // 500
+	TIM1->CCR1=1250; // 500
 	TIM1->CCMR1|=(0b0110<<TIM_CCMR1_OC1M_Pos | TIM_CCMR1_OC1PE);
 	TIM1->BDTR|=(TIM_BDTR_MOE); // TIM_BDTR_BKP | TIM_BDTR_BK2P | 
 //	TIM1->AF1|=(TIM1_AF1_BKINE);
