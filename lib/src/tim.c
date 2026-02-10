@@ -1,6 +1,7 @@
 #include "tim.h"
 #include "gpio.h"
 #include "tft.h"
+#include "dht22.h"
 #include <stdio.h>
 #include "string.h"
 #include <stdlib.h>
@@ -91,4 +92,42 @@ void TIM1_Init(void){
 //	TIM1->AF2|=(TIM1_AF2_BK2INE);
 	TIM1->CCER|=TIM_CCER_CC1E;
 	TIM1->CR1|=TIM_CR1_CEN;
+}
+
+void TIM7_Init(void){
+	RCC->APB1ENR1|=RCC_APB1ENR1_TIM7EN;
+	NVIC_EnableIRQ(TIM7_IRQn);
+	TIM7->PSC=0;   // Prescaler = (f(APB1) / f) - 1
+	TIM7->ARR=SystemCoreClock/1000000-1;   // Period 1000
+	TIM7->CR1=0;
+	TIM7->EGR|=TIM_EGR_UG;
+	TIM7->SR&=~TIM_SR_UIF;
+	TIM7->DIER=TIM_DIER_UIE;
+	TIM7->CR1|=TIM_CR1_CEN;
+	RCC->APB1ENR1&=~RCC_APB1ENR1_TIM7EN;
+}
+
+uint32_t ms=0, us=0;
+uint8_t ms_flag=0, us_flag=0;
+
+void TIM7_IRQHandler(void){
+	TIM7->SR&=~TIM_SR_UIF;
+	if(!ms--) ms_flag=1;
+	if(!us--) us_flag=1;
+}
+
+void delay_ms(uint16_t ms_num){
+	RCC->APB1ENR1|=RCC_APB1ENR1_TIM7EN;
+	ms_flag=0;
+	ms=ms_num*1000;
+	while(!ms_flag);
+//	RCC->APB1ENR1&=~RCC_APB1ENR1_TIM7EN;
+}
+
+void delay_us(uint16_t us_num){
+	RCC->APB1ENR1|=RCC_APB1ENR1_TIM7EN;
+	us_flag=0;
+	us=us_num;
+	while(!us_flag);
+//	RCC->APB1ENR1&=~RCC_APB1ENR1_TIM7EN;
 }

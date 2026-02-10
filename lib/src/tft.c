@@ -2,17 +2,18 @@
 #include "spi.h"
 #include "gpio.h"
 #include "img.h"
+#include "tim.h"
 
 const uint8_t SHIFT_X = 0;
 const uint8_t SHIFT_Y = 20;
 const uint8_t DISP_WIDTH = 240;
 const uint16_t DISP_HEIGHT = 280;
 
-__STATIC_INLINE void delay_ms(__IO uint32_t micros)
-{
-	micros *=(SystemCoreClock / 1000000) / 9;
-	while (micros--);
-}
+//__STATIC_INLINE void delay_us(__IO uint32_t micros)
+//{
+//	micros *=(SystemCoreClock / 1000000) / 9;
+//	while (micros--);
+//}
 
 void TFT_Send_Command(uint8_t com){
 	TFT_CSEN;
@@ -50,22 +51,22 @@ void TFT_Init(void){
 	TFT_DATA;
 	
 	TFT_START;
-	delay_ms(100);
+	delay_us(100);
 	
 	TFT_RES;
-	delay_ms(10);
+	delay_us(10);
 	TFT_START;
-	delay_ms(100);
+	delay_us(100);
 	
 	TFT_Send_Command(ST7789_SWRESET); // Software reset
-	delay_ms(150);
+	delay_us(150);
 	
 	TFT_Send_Command(ST7789_SLPOUT); // Out of sleep mode
-	delay_ms(10);
+	delay_us(10);
 	
 	TFT_Send_Command(ST7789_COLMOD); // Set color mode
 	TFT_Send_Byte(0x55); // 16-bit color
-	delay_ms(10);
+	delay_us(10);
 	
 	TFT_Send_Command(ST7789_MADCTL); // Mem access ctrl (directions)
 	TFT_Send_Byte(0x00); // Row/col addr, bottom-top refresh    3-й бит на "0", чтобы выводило пиксели с младшего бита
@@ -79,13 +80,13 @@ void TFT_Init(void){
 	TFT_Send_Data(data, sizeof(data));}
 	*/
 	TFT_Send_Command(ST7789_INVON); //  hack
-	delay_ms(10);
+	delay_us(10);
 	
 	TFT_Send_Command(ST7789_NORON); // Normal display on
-	delay_ms(10);
+	delay_us(10);
 	
 	TFT_Send_Command(ST7789_DISPON); // Main screen turn on
-	delay_ms(10);
+	delay_us(10);
 	
 }
 
