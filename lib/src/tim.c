@@ -2,9 +2,18 @@
 #include "gpio.h"
 #include "tft.h"
 #include "dht22.h"
-#include <stdio.h>
-#include "string.h"
-#include <stdlib.h>
+
+/*
+Скорость звука в сухом воздухе определяется по формуле с0 = 20,1 sqrt(Т) м/с, 
+а во влажном воздухе с0 = 20,1 sqrt(ТВ) м/с, где ТВ = так называемая акустическая виртуальная температура, 
+которая определяется по формуле ТВ = Т (1+ 0,275 е/р) . 
+При изменении температуры воздуха на 1° скорость звука изменяется на 0,61 м/с. 
+Скорость звука зависит от величины отношения е/р (отношение влажности к давлению) , 
+но эта зависимость мала, и, например, при упругости водяного пара менее 7мм пренебрежение ею дает ошибку в скорости звука, 
+не превышающую 0,5 м/сек. 
+При нормальном давлении и Т = 273° (0 °С) скорость звука в сухом воздухе равна 331 м/сек. 
+Во влажном воздухе скорость звука может быть определена по формуле с = 331 + 0,6t + 0,07е. 
+*/
 
 
 void TIM2_Init(void){
@@ -29,13 +38,11 @@ void TIM2_Init(void){
 
 uint32_t period, pulse_width;
 uint16_t tick=40000;
-int length=0;
+int length=0, length_mid=0;
 uint8_t k=0;
 uint32_t a[100]={0,};
 
-
 void TIM2_IRQHandler(void){
-	char tmp_str[20]={0,};
 	
 	if(TIM2->SR&TIM_SR_CC1IF){
 		
@@ -43,25 +50,13 @@ void TIM2_IRQHandler(void){
 		TIM2->SR&=~TIM_SR_CC2IF;
 		TIM2->CNT=0;
 		period=TIM2->CCR1; // 
-		pulse_width=TIM1->CNT; // TIM2->CCR2
-//		length=((int)((float)pulse_width*50000/285)); // -171228-1403 + 175
-//		if(length>=4386) length-=4386;
-		length+=(pulse_width); // -9770
-//		if(length<0) length=0;
-//		a[k++]=(pulse_width); // /100 -9770
+		pulse_width=TIM1->CNT;
+		length+=pulse_width;
 		
 		if(!--tick){
 			tick=40000; // 
-			length/=40000;
-			a[(k<100)?k++:(k=0)]=length;
-//			k=0;
-//		sprintf(tmp_str, "Период:%6d", period);
-//		TFT_Send_Str(10, 50, tmp_str, strlen(tmp_str), Font_11x18, RED, YELLOW);
-//		sprintf(tmp_str, "Ширина:%6d", pulse_width);
-//		TFT_Send_Str(10, 80, tmp_str, strlen(tmp_str), Font_11x18, RED, YELLOW);
-			
-			sprintf(tmp_str, "%5d В", (length<=1588)?((1588-length)/10+4):0);
-			TFT_Send_Str(50, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+			length_mid=length/40000;
+			a[(k<100)?k++:(k=0)]=length_mid;
 			length=0;
 		}
 	}

@@ -173,12 +173,22 @@
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>data,0x10</ItemText>
+          <ItemText>data_th</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>temper</ItemText>
+          <ItemText>temper,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>hum,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>(1588-length_mid)/10+4,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

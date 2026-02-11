@@ -27,10 +27,14 @@ Project File Date:  02/10/2026
 <h2>Output:</h2>
 *** Using Compiler 'V6.22', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target_1'
+main.c(54): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+   54 |                         sprintf(tmp_str, "%5d <C2>", length_mid); // (length_mid<=1750)?((1750-length_mid)/10+4):0
+      |                                               ^~~~
+1 warning generated.
 compiling main.c...
 linking...
-Program Size: Code=10284 RO-data=9800 RW-data=16 ZI-data=2072  
-".\Objects\1.axf" - 0 Error(s), 0 Warning(s).
+Program Size: Code=10656 RO-data=9812 RW-data=16 ZI-data=2096  
+".\Objects\1.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -42,7 +46,7 @@ Package Vendor: Keil
 <h2>Collection of Component include folders:</h2>
 
 <h2>Collection of Component Files used:</h2>
-Build Time Elapsed:  00:00:00
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>
