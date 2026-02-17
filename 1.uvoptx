@@ -190,6 +190,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>(1588-length_mid)/10+4,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>length_mid,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
@@ -241,6 +246,10 @@
         <Entry>
           <Name>System Viewer\GPIOC</Name>
           <WinId>35904</WinId>
+        </Entry>
+        <Entry>
+          <Name>System Viewer\TIM1</Name>
+          <WinId>35901</WinId>
         </Entry>
         <Entry>
           <Name>System Viewer\TIM2</Name>

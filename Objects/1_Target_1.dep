@@ -1,6 +1,6 @@
 Dependencies for Project '1', Target 'Target_1': (DO NOT MODIFY !)
 CompilerVersion: 6220000::V6.22::ARMCLANG
-F (.\main.c)(0x698C5CF0)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Wall -Wextra -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./lib -I ./lib/inc-D__UVISION_VERSION="541" -DSTM32G431xx-o ./objects/main.o -MMD)
+F (.\main.c)(0x699423B0)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Wall -Wextra -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./lib -I ./lib/inc-D__UVISION_VERSION="541" -DSTM32G431xx-o ./objects/main.o -MMD)
 I (lib\stm32g4xx.h)(0x6964BC31)
 I (lib\stm32g431xx.h)(0x6964BC31)
 I (lib\core_cm4.h)(0x6964BC5E)
@@ -24,7 +24,7 @@ I (lib\stm32g4xx.h)(0x6964BC31)
 I (lib\stm32g431xx.h)(0x6964BC31)
 I (lib\core_cm4.h)(0x6964BC5E)
 I (lib\system_stm32g4xx.h)(0x6964BC31)
-F (.\lib\src\tim.c)(0x698C5717)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Wall -Wextra -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./lib -I ./lib/inc-D__UVISION_VERSION="541" -DSTM32G431xx-o ./objects/tim.o -MMD)
+F (.\lib\src\tim.c)(0x69945E09)(-xc -std=c99 --target=arm-arm-none-eabi -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 -mfloat-abi=hard -c-fno-rtti -funsigned-char -fshort-enums -fshort-wchar-gdwarf-4 -O0 -ffunction-sections -Wall -Wextra -Wno-packed -Wno-reserved-id-macro -Wno-unused-macros -Wno-documentation-unknown-command -Wno-documentation -Wno-license-management -Wno-parentheses-equality -Wno-reserved-identifier -I ./lib -I ./lib/inc-D__UVISION_VERSION="541" -DSTM32G431xx-o ./objects/tim.o -MMD)
 I (lib\inc\tim.h)(0x698C498A)
 I (lib\stm32g4xx.h)(0x6964BC31)
 I (lib\stm32g431xx.h)(0x6964BC31)

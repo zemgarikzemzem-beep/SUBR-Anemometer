@@ -30,7 +30,7 @@ void delay(__IO uint32_t tck){
 	while(--tck);
 }
 
-extern int length_mid;
+extern uint32_t length_mid;
 char tmp_str[20]={0,};
 
 int main(void){
@@ -51,7 +51,7 @@ int main(void){
 			hum=(((data_th[0])<<8)+data_th[1]) / 10; // (float)
 			temper=(((data_th[2] & 0x3F)<<8)+data_th[3]) / 10; // (float)
 		}
-			sprintf(tmp_str, "%5d Â", length_mid); // (length_mid<=1750)?((1750-length_mid)/10+4):0
+			sprintf(tmp_str, "%5d Â", length_mid); // (length_mid<=1572)?((1572-length_mid)/10+4):0
 			TFT_Send_Str(50, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 			
 			sprintf(tmp_str, "%2dC   %2d%%", temper, hum);
