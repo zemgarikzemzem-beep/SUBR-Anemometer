@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\1.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\1.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6220000: Last Updated: Tue Feb 17 17:24:42 2026
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6220000: Last Updated: Thu Feb 26 13:55:22 2026
 <BR><P>
 <H3>Maximum Stack Usage =        324 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -91,7 +91,7 @@ Function Pointers
  <LI><a href="#[9]">SysTick_Handler</a> from startup_stm32g431xx.o(.text) referenced from startup_stm32g431xx.o(RESET)
  <LI><a href="#[50]">SystemInit</a> from system_stm32g4xx.o(.text.SystemInit) referenced from startup_stm32g431xx.o(.text)
  <LI><a href="#[21]">TIM1_BRK_TIM15_IRQHandler</a> from startup_stm32g431xx.o(.text) referenced from startup_stm32g431xx.o(RESET)
- <LI><a href="#[24]">TIM1_CC_IRQHandler</a> from tim.o(.text.TIM1_CC_IRQHandler) referenced from startup_stm32g431xx.o(RESET)
+ <LI><a href="#[24]">TIM1_CC_IRQHandler</a> from startup_stm32g431xx.o(.text) referenced from startup_stm32g431xx.o(RESET)
  <LI><a href="#[23]">TIM1_TRG_COM_TIM17_IRQHandler</a> from startup_stm32g431xx.o(.text) referenced from startup_stm32g431xx.o(RESET)
  <LI><a href="#[22]">TIM1_UP_TIM16_IRQHandler</a> from startup_stm32g431xx.o(.text) referenced from startup_stm32g431xx.o(RESET)
  <LI><a href="#[25]">TIM2_IRQHandler</a> from startup_stm32g431xx.o(.text) referenced from startup_stm32g431xx.o(RESET)
@@ -404,7 +404,7 @@ Global Symbols
 <P><STRONG><a name="[eb]"></a>__rt_entry_postsh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000009))
 
 <P><STRONG><a name="[86]"></a>__rt_entry_main</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$0000000D))
-<BR><BR>[Stack]<UL><LI>Max Depth = 204 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 196 + Unknown Stack Size
 <LI>Call Chain = __rt_entry_main &rArr; main &rArr; TFT_Send_Str &rArr; TFT_Send_Char &rArr; TFT_Set_Area &rArr; TFT_Send_Command &rArr; SPI1_Send_Byte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;exit
@@ -635,6 +635,9 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32g431xx.o(RESET)
 </UL>
 <P><STRONG><a name="[21]"></a>TIM1_BRK_TIM15_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32g431xx.o(.text))
+<BR>[Address Reference Count : 1]<UL><LI> startup_stm32g431xx.o(RESET)
+</UL>
+<P><STRONG><a name="[24]"></a>TIM1_CC_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32g431xx.o(.text))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32g431xx.o(RESET)
 </UL>
 <P><STRONG><a name="[23]"></a>TIM1_TRG_COM_TIM17_IRQHandler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup_stm32g431xx.o(.text))
@@ -1061,7 +1064,7 @@ Global Symbols
 
 <P><STRONG><a name="[f5]"></a>__semihosting_library_function</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, indicate_semi.o(.text), UNUSED)
 
-<P><STRONG><a name="[bc]"></a>Clock_Init</STRONG> (Thumb, 202 bytes, Stack size 0 bytes, rcc.o(.text.Clock_Init))
+<P><STRONG><a name="[bb]"></a>Clock_Init</STRONG> (Thumb, 202 bytes, Stack size 0 bytes, rcc.o(.text.Clock_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -1082,7 +1085,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[bd]"></a>GPIO_Init</STRONG> (Thumb, 90 bytes, Stack size 0 bytes, gpio.o(.text.GPIO_Init))
+<P><STRONG><a name="[bc]"></a>GPIO_Init</STRONG> (Thumb, 90 bytes, Stack size 0 bytes, gpio.o(.text.GPIO_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -1091,7 +1094,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32g431xx.o(RESET)
 </UL>
-<P><STRONG><a name="[be]"></a>SPI1_Init</STRONG> (Thumb, 128 bytes, Stack size 0 bytes, spi.o(.text.SPI1_Init))
+<P><STRONG><a name="[bd]"></a>SPI1_Init</STRONG> (Thumb, 128 bytes, Stack size 0 bytes, spi.o(.text.SPI1_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -1120,9 +1123,9 @@ Global Symbols
 <P><STRONG><a name="[b4]"></a>TFT_Init</STRONG> (Thumb, 230 bytes, Stack size 24 bytes, tft.o(.text.TFT_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = TFT_Init &rArr; TFT_Send_Byte &rArr; SPI1_Send_Byte
 </UL>
-<BR>[Calls]<UL><LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_Send_Byte
+<BR>[Calls]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_us
+<LI><a href="#[b6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_Send_Byte
 <LI><a href="#[b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_Send_Command
-<LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_us
 </UL>
 <BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1171,27 +1174,20 @@ Global Symbols
 <LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_Fill_Color
 </UL>
 
-<P><STRONG><a name="[24]"></a>TIM1_CC_IRQHandler</STRONG> (Thumb, 270 bytes, Stack size 8 bytes, tim.o(.text.TIM1_CC_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = TIM1_CC_IRQHandler
-</UL>
-<BR>[Address Reference Count : 1]<UL><LI> startup_stm32g431xx.o(RESET)
-</UL>
-<P><STRONG><a name="[b9]"></a>TIM1_Init</STRONG> (Thumb, 224 bytes, Stack size 8 bytes, tim.o(.text.TIM1_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = TIM1_Init &rArr; __NVIC_EnableIRQ
-</UL>
-<BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_EnableIRQ
-</UL>
-<BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-</UL>
-
-<P><STRONG><a name="[bf]"></a>TIM2_Init</STRONG> (Thumb, 172 bytes, Stack size 0 bytes, tim.o(.text.TIM2_Init))
+<P><STRONG><a name="[bf]"></a>TIM1_Init</STRONG> (Thumb, 176 bytes, Stack size 0 bytes, tim.o(.text.TIM1_Init))
 <BR><BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[3c]"></a>TIM7_IRQHandler</STRONG> (Thumb, 82 bytes, Stack size 0 bytes, tim.o(.text.TIM7_IRQHandler))
+<P><STRONG><a name="[be]"></a>TIM2_Init</STRONG> (Thumb, 186 bytes, Stack size 0 bytes, tim.o(.text.TIM2_Init))
+<BR><BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+</UL>
+
+<P><STRONG><a name="[3c]"></a>TIM7_IRQHandler</STRONG> (Thumb, 352 bytes, Stack size 16 bytes, tim.o(.text.TIM7_IRQHandler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = TIM7_IRQHandler
+</UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32g431xx.o(RESET)
 </UL>
-<P><STRONG><a name="[bb]"></a>TIM7_Init</STRONG> (Thumb, 156 bytes, Stack size 16 bytes, tim.o(.text.TIM7_Init))
+<P><STRONG><a name="[b9]"></a>TIM7_Init</STRONG> (Thumb, 160 bytes, Stack size 16 bytes, tim.o(.text.TIM7_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = TIM7_Init &rArr; __NVIC_EnableIRQ
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__NVIC_EnableIRQ
@@ -1199,7 +1195,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[ae]"></a>delay_ms</STRONG> (Thumb, 76 bytes, Stack size 4 bytes, tim.o(.text.delay_ms))
+<P><STRONG><a name="[ae]"></a>delay_ms</STRONG> (Thumb, 64 bytes, Stack size 4 bytes, delay.o(.text.delay_ms))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = delay_ms
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DHT22_GetData
@@ -1207,15 +1203,15 @@ Global Symbols
 <LI><a href="#[87]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[af]"></a>delay_us</STRONG> (Thumb, 70 bytes, Stack size 4 bytes, tim.o(.text.delay_us))
+<P><STRONG><a name="[af]"></a>delay_us</STRONG> (Thumb, 64 bytes, Stack size 4 bytes, delay.o(.text.delay_us))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = delay_us
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DHT22_GetData
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_Init
 </UL>
 
-<P><STRONG><a name="[87]"></a>main</STRONG> (Thumb, 344 bytes, Stack size 48 bytes, main.o(.text.main))
-<BR><BR>[Stack]<UL><LI>Max Depth = 204 + Unknown Stack Size
+<P><STRONG><a name="[87]"></a>main</STRONG> (Thumb, 372 bytes, Stack size 40 bytes, main.o(.text.main))
+<BR><BR>[Stack]<UL><LI>Max Depth = 196 + Unknown Stack Size
 <LI>Call Chain = main &rArr; TFT_Send_Str &rArr; TFT_Send_Char &rArr; TFT_Set_Area &rArr; TFT_Send_Command &rArr; SPI1_Send_Byte
 </UL>
 <BR>[Calls]<UL><LI><a href="#[c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
@@ -1223,15 +1219,15 @@ Global Symbols
 <LI><a href="#[ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delay_ms
 <LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_Send_Str
 <LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DHT22_GetData
-<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM1_Init
-<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_Init
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM1_Init
+<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM2_Init
 <LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_Fill_Color
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TFT_Init
-<LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_Init
+<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SPI1_Init
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DHT22_Init
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM7_Init
-<LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Clock_Init
+<LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM7_Init
+<LI><a href="#[bc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
+<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Clock_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
@@ -1351,8 +1347,7 @@ Local Symbols
 <P><STRONG><a name="[ba]"></a>__NVIC_EnableIRQ</STRONG> (Thumb, 48 bytes, Stack size 4 bytes, tim.o(.text.__NVIC_EnableIRQ))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = __NVIC_EnableIRQ
 </UL>
-<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM1_Init
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM7_Init
+<BR>[Called By]<UL><LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM7_Init
 </UL>
 
 <P><STRONG><a name="[53]"></a>_printf_input_char</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, _printf_char_common.o(.text))

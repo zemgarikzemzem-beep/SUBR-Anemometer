@@ -2,7 +2,7 @@
 #include "spi.h"
 #include "gpio.h"
 #include "img.h"
-#include "tim.h"
+#include "delay.h"
 
 const uint8_t SHIFT_X = 0;
 const uint8_t SHIFT_Y = 20;
