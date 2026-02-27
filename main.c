@@ -50,7 +50,7 @@ int main(void){
 			sprintf(tmp_str, "%2d.%dC   %2d.%d%%", temper/10, temper%10, hum/10, hum%10);
 			TFT_Send_Str(10, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		}
-			sprintf(tmp_str, "%5d Â", phase_shift); // (length_mid<=1745)?((1745-length_mid)/10+4):0
+			sprintf(tmp_str, "%5d Â", (phase_shift<=1170)?((1170-phase_shift)/10+4):0); // phase_shift
 			TFT_Send_Str(50, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		delay_ms(2000);
 	}

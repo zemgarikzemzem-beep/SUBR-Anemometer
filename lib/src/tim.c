@@ -114,7 +114,7 @@ void TIM7_IRQHandler(void){
 		
 	if(!--tick){
 		tick=40000; //
-		phase_shift=TIM1->CCR2; // length/40000
+		phase_shift=length/40000; // 
 		a[(k<100)?k++:(k=0)]=phase_shift;
 		length=0; // 
 		min=0xFFFFFFFF;
