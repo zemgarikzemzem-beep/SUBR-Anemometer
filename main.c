@@ -24,7 +24,7 @@
 //}
 
 uint8_t data_th[5]={0,};
-uint16_t temper, hum;
+int temper, hum;
 
 extern uint32_t length_mid, phase_shift;
 char tmp_str[20]={0,};
@@ -50,7 +50,7 @@ int main(void){
 			sprintf(tmp_str, "%2d.%dC   %2d.%d%%", temper/10, temper%10, hum/10, hum%10);
 			TFT_Send_Str(10, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		}
-			sprintf(tmp_str, "%5d Â", (phase_shift<=1170)?((1170-phase_shift)/10+4):0); // phase_shift
+			sprintf(tmp_str, "%5d Â", (phase_shift<=1190-(temper-227)*8)?((1190-(temper-227)*8-phase_shift)/10+4):0); // phase_shift
 			TFT_Send_Str(50, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		delay_ms(2000);
 	}
