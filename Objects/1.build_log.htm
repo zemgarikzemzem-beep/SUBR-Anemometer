@@ -22,22 +22,19 @@ Dialog DLL:      TCM.DLL V1.56.4.0
  
 <h2>Project:</h2>
 C:\Users\User\GitHub_Projects\Anem\1.uvprojx
-Project File Date:  02/26/2026
+Project File Date:  03/04/2026
 
 <h2>Output:</h2>
 *** Using Compiler 'V6.22', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target_1'
-main.c(53): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
-   53 |                         sprintf(tmp_str, "%5d <C2>", (phase_shift<=1190-(temper-227)*8)?((1190-(temper-227)*8-phase_shift)/10+4):0); // phase_shift
-      |                                               ^~~~
-main.c(53): warning: comparison of integers of different signs: 'uint32_t' (aka 'unsigned int') and 'int' [-Wsign-compare]
-   53 |                         sprintf(tmp_str, "%5d <C2>", (phase_shift<=1190-(temper-227)*8)?((1190-(temper-227)*8-phase_shift)/10+4):0); // phase_shift
-      |                                                       ~~~~~~~~~~~^ ~~~~~~~~~~~~~~~~~~~
-2 warnings generated.
+main.c(56): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
+   56 |                 sprintf(tmp_str, "%8d <C2>", (phase_shift<=57155-(temper-243)*8)?((57155-(temper-243)*8-phase_shift)/10+4):0); // phase_shift
+      |                                       ^~~~
+1 warning generated.
 compiling main.c...
 linking...
-Program Size: Code=10744 RO-data=9820 RW-data=20 ZI-data=2092  
-".\Objects\1.axf" - 0 Error(s), 2 Warning(s).
+Program Size: Code=10888 RO-data=9820 RW-data=12 ZI-data=1692  
+".\Objects\1.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 

@@ -439,6 +439,11 @@
               <FileType>1</FileType>
               <FilePath>.\lib\src\data.c</FilePath>
             </File>
+            <File>
+              <FileName>exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\exti.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
