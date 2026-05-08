@@ -23,25 +23,20 @@ void TIM1_Init(void){
 	
 	RCC->APB2ENR|=RCC_APB2ENR_TIM1EN;
 //	NVIC_EnableIRQ(TIM1_CC_IRQn);
-	TIM1->PSC=SystemCoreClock/100000000-1;   // Prescaler = (f(APB1) / f) - 1
-	TIM1->ARR=2500-1;   // Period
-	TIM1->CCR1=1250-1;
+	TIM1->PSC=SystemCoreClock/80000000-1;   // Prescaler = (f(APB1) / f) - 1
+	TIM1->ARR=2000-1;   // Period
+	TIM1->CCR1=1000-1;
 	TIM1->CR1=0;
 	TIM1->CR2|=(0b10<<TIM_CR2_MMS_Pos); //  ?
 	TIM1->SMCR|=((0b00010<<TIM_SMCR_TS_Pos) | (0b0101<<TIM_SMCR_SMS_Pos) | TIM_SMCR_MSM);
 	TIM1->CCMR1|=(TIM_CCMR1_OC1PE | (0b0110<<TIM_CCMR1_OC1M_Pos));
 	TIM1->BDTR|=(TIM_BDTR_MOE);
-	TIM1->CCER|=(TIM_CCER_CC1E | TIM_CCER_CC1P); // 
+	TIM1->CCER|=(TIM_CCER_CC1E); //  | TIM_CCER_CC1P
 //	TIM1->DIER|=TIM_DIER_UIE;
 	TIM1->CR1|=TIM_CR1_CEN;
 }
 
 uint32_t phase1, phase_shift;
-uint32_t tick=40000;
-int32_t length=0, length_mid=0;
-uint32_t min=0xFFFFFFFF, max=0;
-uint8_t k=0;
-uint32_t a[100]={0,};
 
 //void TIM1_CC_IRQHandler(void){
 //		TIM1->SR&=~TIM_SR_UIF;
@@ -53,19 +48,6 @@ uint32_t a[100]={0,};
 //		phase_shift=TIM2->CNT;
 //		TIM1->CNT=0;
 //////		GPIOC->BSRR|=(1<<6);
-//		length+=phase_shift; // length=((length>phase_shift)?phase_shift:length);
-//		min=((min>phase_shift)?phase_shift:min);
-//		max=((max<phase_shift)?phase_shift:max);
-//		
-//		if(!--tick){
-//			tick=40000; // 
-//			phase1=TIM1->CNT;
-//			length_mid=length/40000; // 
-//			a[(k<100)?k++:(k=0)]=length_mid;
-//			length=0; // 
-//			min=0xFFFFFFFF;
-//			max=0;
-//		}
 //	
 //	}
 //}
@@ -75,7 +57,7 @@ void TIM2_Init(void){
 //	GPIOA->AFR[1]|=(0b0001<<GPIO_AFRH_AFSEL15_Pos);
 	
 	RCC->APB1ENR1|=RCC_APB1ENR1_TIM2EN;
-	TIM2->PSC=SystemCoreClock/100000000-1;   // Prescaler = (f(APB1) / f) - 1
+	TIM2->PSC=SystemCoreClock/80000000-1;   // Prescaler = (f(APB1) / f) - 1
 	TIM2->ARR=0xFFFFFFFF;   // Period 1000
 	TIM2->CR1=0;
 	TIM2->SMCR|=((0b0100<<TIM_SMCR_SMS_Pos) | (0b010<<TIM_SMCR_TS_Pos));
@@ -91,12 +73,15 @@ void TIM3_Init(void){
 	RCC->APB1ENR1|=RCC_APB1ENR1_TIM3EN;
 	NVIC_EnableIRQ(TIM3_IRQn);
 	TIM3->PSC=SystemCoreClock/10000-1;   // Prescaler = (f(APB1) / f) - 1
-	TIM3->ARR=10000-1;   // Period 1000
-	TIM3->CCR1=2;
-	TIM3->CR1=0;
+	TIM3->ARR=1000-1;   // Period 1000
+	TIM3->CCR1=4;
+	TIM3->CR1|=TIM_CR1_DIR;
 	TIM3->CR2|=((0b0100<<TIM_CR2_MMS_Pos));
 	TIM3->SMCR|=(TIM_SMCR_MSM);
-	TIM3->CCMR1|=(TIM_CCMR1_OC1PE | (0b0110<<TIM_CCMR1_OC1M_Pos));
+	TIM3->CCMR1|=(TIM_CCMR1_OC1PE | (0b0110<<TIM_CCMR1_OC1M_Pos)); //
+	
+//	TIM3->CCER|=TIM_CCER_CC1P;
+	
 //	TIM3->BDTR|=(TIM_BDTR_MOE);
 	
 	TIM3->EGR|=TIM_EGR_CC1G;
@@ -120,7 +105,7 @@ void TIM3_IRQHandler(void){
 		TIM1->CNT=0;
 		TIM2->CNT=0;
 		new_pulse_flag=1;
-		NVIC_EnableIRQ(EXTI0_IRQn);
+//		NVIC_EnableIRQ(EXTI0_IRQn);
 	}
 //	GPIOC->ODR^=(1<<6);
 }

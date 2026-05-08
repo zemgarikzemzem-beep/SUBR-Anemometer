@@ -444,6 +444,11 @@
               <FileType>1</FileType>
               <FilePath>.\lib\src\exti.c</FilePath>
             </File>
+            <File>
+              <FileName>TDC1000.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\TDC1000.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

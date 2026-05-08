@@ -12,6 +12,7 @@
 #include "dht22.h"
 #include "exti.h"
 #include "delay.h"
+#include "TDC1000.h"
 
 
 //void delay(__IO uint32_t tck)
@@ -34,28 +35,60 @@ int main(void){
 	Clock_Init();
 	GPIO_Init();
 	DHT22_Init();
+	
 	SPI1_Init();
 	TFT_Init();
+	
+	SPI2_Init();
+	MCO_Init();  // Либо TIM1, либо - это !!!
+	TDC1000_Init();
+	TDC7200_Init();
+	uint8_t ansv=0;
+	
 	TFT_Fill_Color(YELLOW);
-	TIM3_Init();
-	TIM1_Init();
-	TIM2_Init();
-	EXTI_Init();
+	
+//	TIM3_Init();
+//	TIM1_Init();
+//	TIM2_Init();
+//	EXTI_Init();
 	
 	while(1){
+		
+		TDC7200_SPIWrite(0x00, 0x03);
+	
+		ansv=TDC1000_SPIRead(TDC1000_REG_ADR_ERROR_FLAGS);
+		sprintf(tmp_str, "0x%X", ansv);
+		TFT_Send_Str(20, 90, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+	
+		ansv=TDC7200_SPIRead(0x02);
+		sprintf(tmp_str, "0x%X", ansv);
+		TFT_Send_Str(20, 120, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+	
+		ansv=TDC7200_SPIRead(0x10);
+		sprintf(tmp_str, "0x%X", ansv);
+		TFT_Send_Str(20, 150, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+	
+		ansv=TDC7200_SPIRead(0x11);
+		sprintf(tmp_str, "0x%X", ansv);
+		TFT_Send_Str(20, 180, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+	
+//		ansv=TDC7200_SPIRead(0x13);
+//		sprintf(tmp_str, "0x%X", ansv);
+//		TFT_Send_Str(20, 180, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		//SPI1_Send_Byte(0xAA);
 //		GPIOC->ODR^=(1<<6);
 		
-		if(((data_th[0]+data_th[1]+data_th[2]+data_th[3])&0xFF)==data_th[4] && DHT22_GetData(data_th)){ // 
-			hum=(((data_th[0])<<8)+data_th[1]); // (float) / 10
-			temper=(((data_th[2] & 0x3F)<<8)+data_th[3]); // (float) / 10
-			
-		}
-		sprintf(tmp_str, "%2d.%dC   %2d.%d%%", temper/10, temper%10, hum/10, hum%10);
-		TFT_Send_Str(10, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-		sprintf(tmp_str, "%8d В", (phase_shift<=57155-(temper-243)*8)?((57155-(temper-243)*8-phase_shift)/10+4):0); // phase_shift
-		TFT_Send_Str(50, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-		delay_ms(2000);
+//		if(((data_th[0]+data_th[1]+data_th[2]+data_th[3])&0xFF)==data_th[4] && DHT22_GetData(data_th)){ // 
+//			hum=(((data_th[0])<<8)+data_th[1]); // (float) / 10
+//			temper=(((data_th[2] & 0x3F)<<8)+data_th[3]); // (float) / 10
+//			
+//		}
+//		sprintf(tmp_str, "%2d.%dC   %2d.%d%%", temper/10, temper%10, hum/10, hum%10);
+//		TFT_Send_Str(10, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//		
+//		sprintf(tmp_str, "%5d м/с", (length_mid<=1820-(temper-220)*5)?((1820-(temper-220)*5-length_mid)/10+4):0); // phase_shift 40010 243
+//		TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+		delay_ms(200);
 
 		
 	}

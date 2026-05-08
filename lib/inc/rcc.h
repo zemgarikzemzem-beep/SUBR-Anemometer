@@ -4,6 +4,7 @@
 #include "stm32g4xx.h"
 
 int Clock_Init(void);
+void MCO_Init(void);
 
 #endif
 
