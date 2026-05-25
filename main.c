@@ -31,6 +31,23 @@ int temper, hum;
 extern int32_t length_mid, phase_shift;
 char tmp_str[20]={0,};
 
+uint8_t answ=0;
+uint32_t time1=0, clock1=0;
+
+double TOF=0, normLSB=0, calCount=0;
+
+void TOF_Calc(void){
+	uint32_t CAL1, CAL2, CAL2_PER, CLOCK, TIME_1;
+	CLOCK=10000000;
+	CAL2_PER=10;
+	CAL1=TDC7200_SPIRead_Reg(0x1B, 3);
+	CAL2=TDC7200_SPIRead_Reg(0x1C, 3);
+	TIME_1=TDC7200_SPIRead_Reg(0x10, 3);
+	calCount=(double)(CAL2-CAL1)/(CAL2_PER-1);
+	normLSB=(double)(1/(double)CLOCK)/calCount;
+	TOF=TIME_1*normLSB*1000000000;
+}
+
 int main(void){
 	Clock_Init();
 	GPIO_Init();
@@ -43,10 +60,16 @@ int main(void){
 	MCO_Init();  // Ћибо TIM1, либо - это !!!
 	TDC1000_Init();
 	TDC7200_Init();
-	uint8_t ansv=0;
 	
 	TFT_Fill_Color(YELLOW);
 	
+//	TDC1000_SPIWrite(0x01, 0x45);
+	answ=TDC1000_SPIRead(0x00);
+	sprintf(tmp_str, "0x%X", answ);
+	TFT_Send_Str(20, 90, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+	
+//	time1=TDC7200_SPIRead_Reg(0x01, 4);
+//			TDC1000_SPIWrite(TDC1000_REG_ADR_CONFIG_0, 0x45);
 //	TIM3_Init();
 //	TIM1_Init();
 //	TIM2_Init();
@@ -55,25 +78,42 @@ int main(void){
 	while(1){
 		
 		TDC7200_SPIWrite(0x00, 0x03);
+		
+		while(TDC7200_INTBUP);
+		
+		if(TDC7200_INTBDW){
+//			time1=TDC7200_SPIRead_Reg(0x1C, 3); // 
+//			clock1=TDC7200_SPIRead_Reg(0x11, 3);
+			TOF_Calc();
+		}
+		
+		delay_ms(100);
+		
+		answ=TDC7200_SPIRead(0x02);
+		if((answ&((1<<0)|(1<<1)|(1<<2))) == ((1<<0)|(0<<1)|(0<<2))){
+			answ=TDC1000_SPIRead(TDC1000_REG_ADR_ERROR_FLAGS);
+			sprintf(tmp_str, "0x%X", answ);
+			TFT_Send_Str(20, 90, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+		
+			answ=TDC7200_SPIRead(0x02);
+			sprintf(tmp_str, "0x%X", answ);
+			TFT_Send_Str(20, 120, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+		
+			sprintf(tmp_str, "0x%X", time1);
+			TFT_Send_Str(20, 150, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+		
+			sprintf(tmp_str, "%lf", TOF);
+			TFT_Send_Str(20, 180, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+		}
+		else TFT_Fill_Color(YELLOW);
 	
-		ansv=TDC1000_SPIRead(TDC1000_REG_ADR_ERROR_FLAGS);
-		sprintf(tmp_str, "0x%X", ansv);
-		TFT_Send_Str(20, 90, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 	
-		ansv=TDC7200_SPIRead(0x02);
-		sprintf(tmp_str, "0x%X", ansv);
-		TFT_Send_Str(20, 120, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//		answ=TDC7200_SPIRead(0x1C);
+//		sprintf(tmp_str, "0x%X", answ);
+//		TFT_Send_Str(20, 210, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 	
-		ansv=TDC7200_SPIRead(0x10);
-		sprintf(tmp_str, "0x%X", ansv);
-		TFT_Send_Str(20, 150, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-	
-		ansv=TDC7200_SPIRead(0x11);
-		sprintf(tmp_str, "0x%X", ansv);
-		TFT_Send_Str(20, 180, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-	
-//		ansv=TDC7200_SPIRead(0x13);
-//		sprintf(tmp_str, "0x%X", ansv);
+//		answ=TDC7200_SPIRead(0x13);
+//		sprintf(tmp_str, "0x%X", answ);
 //		TFT_Send_Str(20, 180, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		//SPI1_Send_Byte(0xAA);
 //		GPIOC->ODR^=(1<<6);
@@ -88,7 +128,7 @@ int main(void){
 //		
 //		sprintf(tmp_str, "%5d м/с", (length_mid<=1820-(temper-220)*5)?((1820-(temper-220)*5-length_mid)/10+4):0); // phase_shift 40010 243
 //		TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-		delay_ms(200);
+
 
 		
 	}

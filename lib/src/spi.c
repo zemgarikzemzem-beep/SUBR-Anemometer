@@ -49,25 +49,29 @@ void SPI2_Init(void){
 	SPI2->CR1=0;
 	SPI2->CR1|=((0b101<<SPI_CR1_BR_Pos)|SPI_CR1_MSTR|SPI_CR1_SSM|SPI_CR1_SSI);//|SPI_CR1_CPHA|SPI_CR1_CPOL|SPI_CR1_BIDIMODE|SPI_CR1_BIDIOE
 	SPI2->CR2=0x0000;
-	SPI2->CR2|=((0b1111<<SPI_CR2_DS_Pos)); //|SPI_CR2_NSSP|SPI_CR2_FRXTH
+	SPI2->CR2|=((0b0111<<SPI_CR2_DS_Pos)|SPI_CR2_NSSP|SPI_CR2_FRXTH); //
 	
-//	SPI2->CR2|=SPI_CR2_TXDMAEN;
+//	SPI2->CR2|=SPI_CR2_RXDMAEN;
 //	DMA1_CSELR->CSELR|=(0b0001<<DMA_CSELR_C3S_Pos);
 	
 	SPI2->CR1|=SPI_CR1_SPE;
 }
 
-inline uint8_t SPI2_Send_Byte(uint8_t b){
-//	DMA1_Channel1->CCR=0;
-//	DMA1_Channel1->CCR|=(DMA_CCR_MINC|DMA_CCR_DIR);
-//	DMA1_Channel1->CPAR=(uint32_t)(&(SPI2->DR));
-//	DMA1_Channel1->CMAR=(uint32_t)&b;
-//	DMA1_Channel1->CNDTR=sizeof(b);
-//	DMA1_Channel1->CCR|=DMA_CCR_EN;
-//	while((SPI2->SR&SPI_SR_BSY));
-	*(__IO uint8_t*)&(SPI2->DR)=b;   // фишка для записи одного байта в DR!!! || !(SPI2->SR&SPI_SR_TXE)
+inline uint32_t SPI2_Send_Receive_Byte(uint8_t addr){
+	uint8_t data[4]={0,};
+	while(!(SPI2->SR&SPI_SR_TXE));
+	SPI2->DR=(0x00|addr);
+	while(!(SPI2->SR&SPI_SR_TXE));
+	DMA1_Channel1->CCR=0;
+	DMA1_Channel1->CCR|=(DMA_CCR_MINC); // |DMA_CCR_DIR
+	DMA1_Channel1->CPAR=(uint32_t)(&(SPI2->DR));
+	DMA1_Channel1->CMAR=(uint32_t)data;
+	DMA1_Channel1->CNDTR=4;
+	DMA1_Channel1->CCR|=DMA_CCR_EN;
 	while((SPI2->SR&SPI_SR_BSY));
-	while(!(SPI2->SR&SPI_SR_RXNE));
-	return SPI2->DR;
+//	*(__IO uint8_t*)&(SPI2->DR)=b;   // фишка для записи одного байта в DR!!! || !(SPI2->SR&SPI_SR_TXE)
+//	while((SPI2->SR&SPI_SR_BSY));
+//	while(!(SPI2->SR&SPI_SR_RXNE));
+	return (((data[0]<<24) | (data[1]<<16) | (data[2]<<8) | data[3]) & 0x3FFFFF);
 }
 

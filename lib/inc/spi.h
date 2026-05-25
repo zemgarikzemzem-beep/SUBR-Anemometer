@@ -6,6 +6,6 @@
 void SPI1_Init(void);
 void SPI1_Send_Byte(uint8_t b);
 void SPI2_Init(void);
-uint8_t SPI2_Send_Byte(uint8_t b);
+uint32_t SPI2_Send_Receive_Byte(uint8_t addr);
 
 #endif
