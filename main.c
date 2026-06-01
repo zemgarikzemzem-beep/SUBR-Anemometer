@@ -34,24 +34,28 @@ char tmp_str[20]={0,};
 uint8_t answ=0;
 uint32_t time1=0, clock1=0;
 
-double TOF=0, normLSB=0, calCount=0;
+double TOF=0, normLSB=0, calCount=0, offset;
 
 void TOF_Calc(void){
-	uint32_t CAL1, CAL2, CAL2_PER, CLOCK, TIME_1;
+	uint32_t CAL1, CAL2, CAL2_PER, CLOCK, TIME_1, TIME_2, CLOCK_COUNT1;
 	CLOCK=10000000;
 	CAL2_PER=10;
 	CAL1=TDC7200_SPIRead_Reg(0x1B, 3);
 	CAL2=TDC7200_SPIRead_Reg(0x1C, 3);
 	TIME_1=TDC7200_SPIRead_Reg(0x10, 3);
+	CLOCK_COUNT1=TDC7200_SPIRead_Reg(0x11, 3);
+	TIME_2=TDC7200_SPIRead_Reg(0x12, 3);
 	calCount=(double)(CAL2-CAL1)/(CAL2_PER-1);
-	normLSB=(double)(1/(double)CLOCK)/calCount;
-	TOF=TIME_1*normLSB*1000000000;
+	normLSB=(1/(double)CLOCK)/calCount; // (double)
+//	offset=1/(double)CLOCK - CAL1*normLSB;
+	
+	TOF=(TIME_1*normLSB + (double)(CLOCK_COUNT1)/CLOCK - (double)TIME_2*normLSB)*100000000; // 64998
 }
 
 int main(void){
 	Clock_Init();
 	GPIO_Init();
-	DHT22_Init();
+//	DHT22_Init();
 	
 	SPI1_Init();
 	TFT_Init();
@@ -64,9 +68,9 @@ int main(void){
 	TFT_Fill_Color(YELLOW);
 	
 //	TDC1000_SPIWrite(0x01, 0x45);
-	answ=TDC1000_SPIRead(0x00);
-	sprintf(tmp_str, "0x%X", answ);
-	TFT_Send_Str(20, 90, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//	answ=TDC1000_SPIRead(0x00);
+//	sprintf(tmp_str, "0x%X", answ);
+//	TFT_Send_Str(20, 90, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 	
 //	time1=TDC7200_SPIRead_Reg(0x01, 4);
 //			TDC1000_SPIWrite(TDC1000_REG_ADR_CONFIG_0, 0x45);
@@ -91,19 +95,22 @@ int main(void){
 		
 		answ=TDC7200_SPIRead(0x02);
 		if((answ&((1<<0)|(1<<1)|(1<<2))) == ((1<<0)|(0<<1)|(0<<2))){
-			answ=TDC1000_SPIRead(TDC1000_REG_ADR_ERROR_FLAGS);
-			sprintf(tmp_str, "0x%X", answ);
-			TFT_Send_Str(20, 90, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//			answ=TDC1000_SPIRead(TDC1000_REG_ADR_ERROR_FLAGS);
+//			sprintf(tmp_str, "0x%X", answ);
+//			TFT_Send_Str(20, 90, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//		
+//			answ=TDC7200_SPIRead(0x02);
+//			sprintf(tmp_str, "0x%X", answ);
+//			TFT_Send_Str(20, 120, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//		
+//			sprintf(tmp_str, "0x%X", time1);
+//			TFT_Send_Str(20, 150, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		
-			answ=TDC7200_SPIRead(0x02);
-			sprintf(tmp_str, "0x%X", answ);
-			TFT_Send_Str(20, 120, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-		
-			sprintf(tmp_str, "0x%X", time1);
-			TFT_Send_Str(20, 150, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-		
-			sprintf(tmp_str, "%lf", TOF);
-			TFT_Send_Str(20, 180, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//			sprintf(tmp_str, "%lf", TOF);
+//			TFT_Send_Str(20, 180, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+			
+			sprintf(tmp_str, "%5d ì/ñ", ((((uint32_t)TOF<=64998) && ((64998-(uint32_t)TOF)/8+4)<60))?((64998-(uint32_t)TOF)/10+4):0); // phase_shift 40010 243
+			TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		}
 		else TFT_Fill_Color(YELLOW);
 	
