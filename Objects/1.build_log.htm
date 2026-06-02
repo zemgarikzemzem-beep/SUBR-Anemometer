@@ -28,12 +28,12 @@ Project File Date:  04/24/2026
 *** Using Compiler 'V6.22', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'Target_1'
 main.c(112): warning: illegal character encoding in string literal [-Winvalid-source-encoding]
-  112 |                         sprintf(tmp_str, "%5d <EC>/<F1>", ((((uint32_t)TOF<=64998) && ((64998-(uint32_t)TOF)/8+4)<60))?((64998-(uint32_t)TOF)/10+4):0); // phase_shift 40010 243
+  112 |                         sprintf(tmp_str, "%5d <EC>/<F1>", ((((int)TOF<=64926-(temper-248)*5) && ((64926-(temper-248)*5-(int)TOF)/8+4)<60))?((64926-(int)TOF)/8+4):0); // phase_shift 40010 243
       |                                               ^~~~ ~~~~
 1 warning generated.
 compiling main.c...
 linking...
-Program Size: Code=13780 RO-data=9800 RW-data=24 ZI-data=2120  
+Program Size: Code=14480 RO-data=9820 RW-data=24 ZI-data=2136  
 ".\Objects\1.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>

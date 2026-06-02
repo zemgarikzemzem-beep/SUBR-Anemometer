@@ -55,7 +55,7 @@ void TOF_Calc(void){
 int main(void){
 	Clock_Init();
 	GPIO_Init();
-//	DHT22_Init();
+	DHT22_Init();
 	
 	SPI1_Init();
 	TFT_Init();
@@ -109,7 +109,7 @@ int main(void){
 //			sprintf(tmp_str, "%lf", TOF);
 //			TFT_Send_Str(20, 180, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 			
-			sprintf(tmp_str, "%5d ì/ñ", ((((uint32_t)TOF<=64998) && ((64998-(uint32_t)TOF)/8+4)<60))?((64998-(uint32_t)TOF)/10+4):0); // phase_shift 40010 243
+			sprintf(tmp_str, "%5d ì/ñ", ((((int)TOF<=64926-(temper-248)*5) && ((64926-(temper-248)*5-(int)TOF)/8+4)<60))?((64926-(int)TOF)/8+4):0); // phase_shift 40010 243
 			TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		}
 		else TFT_Fill_Color(YELLOW);
@@ -125,13 +125,13 @@ int main(void){
 		//SPI1_Send_Byte(0xAA);
 //		GPIOC->ODR^=(1<<6);
 		
-//		if(((data_th[0]+data_th[1]+data_th[2]+data_th[3])&0xFF)==data_th[4] && DHT22_GetData(data_th)){ // 
-//			hum=(((data_th[0])<<8)+data_th[1]); // (float) / 10
-//			temper=(((data_th[2] & 0x3F)<<8)+data_th[3]); // (float) / 10
-//			
-//		}
-//		sprintf(tmp_str, "%2d.%dC   %2d.%d%%", temper/10, temper%10, hum/10, hum%10);
-//		TFT_Send_Str(10, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+		if(((data_th[0]+data_th[1]+data_th[2]+data_th[3])&0xFF)==data_th[4] && DHT22_GetData(data_th)){ // 
+			hum=(((data_th[0])<<8)+data_th[1]); // (float) / 10
+			temper=(((data_th[2] & 0x3F)<<8)+data_th[3]); // (float) / 10
+			
+		}
+		sprintf(tmp_str, "%2d.%dC   %2d.%d%%", temper/10, temper%10, hum/10, hum%10);
+		TFT_Send_Str(10, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 //		
 //		sprintf(tmp_str, "%5d ì/ñ", (length_mid<=1820-(temper-220)*5)?((1820-(temper-220)*5-length_mid)/10+4):0); // phase_shift 40010 243
 //		TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
