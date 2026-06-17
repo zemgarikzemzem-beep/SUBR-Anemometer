@@ -25,6 +25,14 @@
 //	);
 //}
 
+enum mes_modes{
+	TEMP_MODE,
+	TOF_MODE
+};
+
+uint8_t mes_mode=TOF_MODE;
+
+
 uint8_t data_th[5]={0,};
 int temper, hum;
 
@@ -35,6 +43,8 @@ uint8_t answ=0;
 uint32_t time1=0, clock1=0;
 
 double TOF=0, Temperature=0;
+
+uint8_t mes_wait=10;
 
 void TOF_Calc(void){
 	uint32_t CAL1, CAL2, CAL2_PER, TIME_1, TIME_2, CLOCK_COUNT1;
@@ -117,8 +127,7 @@ int main(void){
 	TDC1000_Init();
 	TDC7200_Init();
 	
-		TDC1000_TEMP_MEASURE_MODE_ON;
-		TDC7200_5_STOP;
+		
 	
 	TFT_Fill_Color(YELLOW);
 	
@@ -136,20 +145,33 @@ int main(void){
 	
 	while(1){
 		
-//		TDC1000_TEMP_MEASURE_MODE_ON;
-//		TDC7200_5_STOP;
-		
+		if(!(mes_wait--)){
+			if(mes_mode==TOF_MODE){
+				mes_mode=TEMP_MODE;
+				mes_wait=5;
+				TDC1000_TEMP_MEASURE_MODE_ON;
+				TDC7200_5_STOP;
+			}
+			else{
+				mes_mode=TOF_MODE;
+				mes_wait=55;
+				TDC1000_TEMP_MEASURE_MODE_OFF;
+				TDC7200_1_STOP;
+			}
+		}
 		
 		TDC7200_SPIWrite(0x00, 0x83);     //  0x03
 		
-		while(TDC7200_INTBUP);
+		while(TDC7200_INTBUP);             //         Добавить тайминг безответности !!!
 		
+//		delay_ms(100);
 		if(TDC7200_INTBDW){
 //			time1=TDC7200_SPIRead_Reg(0x1C, 3); // 
 //			clock1=TDC7200_SPIRead_Reg(0x11, 3);
-			
-//			TOF_Calc();
-			Temper_Calc();
+			if(mes_mode==TOF_MODE) TOF_Calc();
+			else{
+				Temper_Calc();
+			}
 		}
 		
 		delay_ms(100);
@@ -158,20 +180,18 @@ int main(void){
 		if((answ&((1<<0)|(1<<1)|(1<<2))) == ((1<<0)|(0<<1)|(0<<2))){
 			
 			
-//			int TOF_corr=65080-(temper-222)*7;
-//			sprintf(tmp_str, "%5d м/с", ((((int)TOF<=TOF_corr) && ((TOF_corr-(int)TOF)/8+4)<60))?((TOF_corr-(int)TOF)/8+4):0); //    64926
-//			TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+			int TOF_corr=62087-((uint32_t)(Temperature*10)-250)*5;
+			sprintf(tmp_str, "%5d м/с", ((((int)TOF<=TOF_corr) && ((TOF_corr-(int)TOF)/10+4)<60))?((TOF_corr-(int)TOF)/10+4):0); //    64926
+			TFT_Send_Str(20, 140, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 			
 			sprintf(tmp_str, "%7d.%dC", (uint32_t)Temperature, ((uint32_t)(Temperature*10)%10));
 			TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-			sprintf(tmp_str, "0x%X", (uint32_t)TDC1000_SPIRead(0x07));
-			TFT_Send_Str(20, 110, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-			sprintf(tmp_str, "%5d", (uint32_t)(TOF1*1000000));
-			TFT_Send_Str(20, 140, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-			sprintf(tmp_str, "%5d", (uint32_t)((TOF5)*1000000));
-			TFT_Send_Str(20, 170, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-			sprintf(tmp_str, "0x%X", TDC1000_SPIRead(0x01)); //%5d(uint32_t)(TOF5*1000000)
+//			sprintf(tmp_str, "0x%X", (uint32_t)TDC1000_SPIRead(0x07));
+//			TFT_Send_Str(20, 110, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+			sprintf(tmp_str, "%5d", (uint32_t)(TOF));
 			TFT_Send_Str(20, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//			sprintf(tmp_str, "0x%X", TDC1000_SPIRead(0x01)); //%5d(uint32_t)(TOF5*1000000)
+//			TFT_Send_Str(20, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 			
 		}
 		else TFT_Fill_Color(YELLOW);
