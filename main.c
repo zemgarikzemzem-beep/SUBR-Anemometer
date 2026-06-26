@@ -207,6 +207,10 @@ int main(void){
 //		TFT_Send_Str(10, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		
 		
+			sprintf(tmp_str, "0x%X", TDC1000_SPIRead(0x07)); //%5d(uint32_t)(TOF5*1000000)
+			TFT_Send_Str(20, 170, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+		
+		
 
 //		TDC1000_TEMP_MEASURE_MODE_OFF;
 
