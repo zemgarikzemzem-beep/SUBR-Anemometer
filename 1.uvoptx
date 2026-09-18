@@ -153,37 +153,17 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>TOF1*1000000</ItemText>
+          <ItemText>R_RTD1</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>TOF2*1000000</ItemText>
+          <ItemText>(TIME_1-TIME_2)*normLSB*1000000</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>TOF3*1000000</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>TOF4*1000000</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>TOF5*1000000</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>R_RTD1</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>(TIME_1-TIME_2)*normLSB*1000000</ItemText>
+          <ItemText>silence_timing,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

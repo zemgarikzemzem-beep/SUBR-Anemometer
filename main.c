@@ -46,6 +46,8 @@ double TOF=0, Temperature=0;
 
 uint8_t mes_wait=10;
 
+uint32_t tdc7200_intb_no_answer_timing=0;
+
 void TOF_Calc(void){
 	uint32_t CAL1, CAL2, CAL2_PER, TIME_1, TIME_2, CLOCK_COUNT1;
 	double normLSB=0, calCount=0, offset;
@@ -114,6 +116,8 @@ void Temper_Calc(void){
 	Temperature=(R_RTD1-R_REF)/(R_REF*0.00385); // 
 }
 
+
+
 int main(void){
 	Clock_Init();
 	GPIO_Init();
@@ -161,14 +165,22 @@ int main(void){
 		}
 		
 		TDC7200_SPIWrite(0x00, 0x83);     //  0x03
+	
+//		TDC7200_SPIWrite(TDC7200_REG_ADR_CONFIG1, ((0b1<<TDC7200_REG_CONFIG1_FORCE_CAL_Pos)\
+//																	| (0b0<<TDC7200_REG_CONFIG1_PARITY_EN_Pos) | (0b0<<TDC7200_REG_CONFIG1_TRIGG_EDGE_Pos)\
+//																	| (0b0<<TDC7200_REG_CONFIG1_STOP_EDGE_Pos) | (0b0<<TDC7200_REG_CONFIG1_START_EDGE_Pos)\
+//																	| (0b01<<TDC7200_REG_CONFIG1_MEAS_MODE_Pos) | (0b1<<TDC7200_REG_CONFIG1_START_MEAS_Pos)));
 		
-		while(TDC7200_INTBUP);             //         Добавить тайминг безответности !!!
+		tdc7200_intb_no_answer_timing=5000 * SystemCoreClock/1000/9;
+		while(TDC7200_INTBUP && (--tdc7200_intb_no_answer_timing));             //         Добавить тайминг безответности !!!
 		
 //		delay_ms(100);
-		if(TDC7200_INTBDW){
+		if(TDC7200_INTBDW && tdc7200_intb_no_answer_timing){
 //			time1=TDC7200_SPIRead_Reg(0x1C, 3); // 
 //			clock1=TDC7200_SPIRead_Reg(0x11, 3);
-			if(mes_mode==TOF_MODE) TOF_Calc();
+			if(mes_mode==TOF_MODE){
+				TOF_Calc();
+			}
 			else{
 				Temper_Calc();
 			}
@@ -176,8 +188,11 @@ int main(void){
 		
 		delay_ms(100);
 		
-		answ=TDC7200_SPIRead(0x02);
-		if((answ&((1<<0)|(1<<1)|(1<<2))) == ((1<<0)|(0<<1)|(0<<2))){
+		answ=TDC7200_SPIRead(TDC7200_REG_ADR_INT_STATUS);
+		if((answ&((TDC7200_REG_INT_STATUS_NEW_MEAS_INT_Msk<<TDC7200_REG_INT_STATUS_NEW_MEAS_INT_Pos)\
+							|(TDC7200_REG_INT_STATUS_COARSE_CNTR_OVF_INT_Msk<<TDC7200_REG_INT_STATUS_COARSE_CNTR_OVF_INT_Pos)\
+							|(TDC7200_REG_INT_STATUS_CLOCK_CNTR_OVF_INT_Msk<<TDC7200_REG_INT_STATUS_CLOCK_CNTR_OVF_INT_Pos))) ==\
+							((1<<TDC7200_REG_INT_STATUS_NEW_MEAS_INT_Pos)|(0<<TDC7200_REG_INT_STATUS_COARSE_CNTR_OVF_INT_Pos)|(0<<TDC7200_REG_INT_STATUS_CLOCK_CNTR_OVF_INT_Pos))){
 			
 			
 			int TOF_corr=62087-((uint32_t)(Temperature*10)-250)*5;
@@ -207,7 +222,7 @@ int main(void){
 //		TFT_Send_Str(10, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		
 		
-			sprintf(tmp_str, "0x%X", TDC1000_SPIRead(0x07)); //%5d(uint32_t)(TOF5*1000000)
+			sprintf(tmp_str, "0x%X", TDC1000_SPIRead(TDC1000_REG_ADR_ERROR_FLAGS)); //%5d(uint32_t)(TOF5*1000000)
 			TFT_Send_Str(20, 170, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 		
 		
