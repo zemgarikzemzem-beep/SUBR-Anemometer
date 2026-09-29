@@ -14,6 +14,7 @@
 #include "delay.h"
 #include "TDC1000.h"
 
+//#define TEMP_ONLY
 
 //void delay(__IO uint32_t tck)
 //{
@@ -43,6 +44,8 @@ uint8_t answ=0;
 uint32_t time1=0, clock1=0;
 
 double TOF=0, Temperature=0;
+uint32_t TOF_Stat;
+uint8_t TOF_Stat_ind=100;
 
 uint8_t mes_wait=10;
 
@@ -149,6 +152,34 @@ int main(void){
 	
 	while(1){
 		
+		#ifdef TEMP_ONLY
+		TDC1000_TEMP_MEASURE_MODE_ON;
+		TDC7200_5_STOP;
+		
+		TDC7200_SPIWrite(TDC7200_REG_ADR_CONFIG1, ((0b1<<TDC7200_REG_CONFIG1_FORCE_CAL_Pos)\
+																	| (0b0<<TDC7200_REG_CONFIG1_PARITY_EN_Pos) | (0b0<<TDC7200_REG_CONFIG1_TRIGG_EDGE_Pos)\
+																	| (0b0<<TDC7200_REG_CONFIG1_STOP_EDGE_Pos) | (0b0<<TDC7200_REG_CONFIG1_START_EDGE_Pos)\
+																	| (0b01<<TDC7200_REG_CONFIG1_MEAS_MODE_Pos) | (0b1<<TDC7200_REG_CONFIG1_START_MEAS_Pos)));
+//		TDC7200_SPIWrite(0x00, 0x83);
+		tdc7200_intb_no_answer_timing=5000 * SystemCoreClock/1000/9;
+		while(TDC7200_INTBUP && (--tdc7200_intb_no_answer_timing));             //         Добавить тайминг безответности !!!
+		
+//		delay_ms(100);
+		if(TDC7200_INTBDW && tdc7200_intb_no_answer_timing) Temper_Calc();
+		
+		delay_ms(100);
+		
+		answ=TDC7200_SPIRead(TDC7200_REG_ADR_INT_STATUS);
+		if((answ&((TDC7200_REG_INT_STATUS_NEW_MEAS_INT_Msk<<TDC7200_REG_INT_STATUS_NEW_MEAS_INT_Pos)\
+							|(TDC7200_REG_INT_STATUS_COARSE_CNTR_OVF_INT_Msk<<TDC7200_REG_INT_STATUS_COARSE_CNTR_OVF_INT_Pos)\
+							|(TDC7200_REG_INT_STATUS_CLOCK_CNTR_OVF_INT_Msk<<TDC7200_REG_INT_STATUS_CLOCK_CNTR_OVF_INT_Pos))) ==\
+							((1<<TDC7200_REG_INT_STATUS_NEW_MEAS_INT_Pos)|(0<<TDC7200_REG_INT_STATUS_COARSE_CNTR_OVF_INT_Pos)|(0<<TDC7200_REG_INT_STATUS_CLOCK_CNTR_OVF_INT_Pos))){
+								
+								sprintf(tmp_str, "%7d.%dC", (uint32_t)Temperature, ((uint32_t)(Temperature*10)%10));
+								TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+							}
+		#else
+		
 		if(!(mes_wait--)){
 			if(mes_mode==TOF_MODE){
 				mes_mode=TEMP_MODE;
@@ -195,23 +226,33 @@ int main(void){
 							((1<<TDC7200_REG_INT_STATUS_NEW_MEAS_INT_Pos)|(0<<TDC7200_REG_INT_STATUS_COARSE_CNTR_OVF_INT_Pos)|(0<<TDC7200_REG_INT_STATUS_CLOCK_CNTR_OVF_INT_Pos))){
 			
 			
-			int TOF_corr=62087-((uint32_t)(Temperature*10)-250)*5;
-			sprintf(tmp_str, "%5d м/с", ((((int)TOF<=TOF_corr) && ((TOF_corr-(int)TOF)/10+4)<60))?((TOF_corr-(int)TOF)/10+4):0); //    64926
-			TFT_Send_Str(20, 140, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+//			int TOF_corr=57550; // -((uint32_t)(Temperature*10)-250)*5
+//			sprintf(tmp_str, "%5d м/с", ((((int)TOF<=TOF_corr) && ((TOF_corr-(int)TOF)/10+4)<60))?((TOF_corr-(int)TOF)/10+4):0); //    64926
+//			TFT_Send_Str(20, 140, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 			
 			sprintf(tmp_str, "%7d.%dC", (uint32_t)Temperature, ((uint32_t)(Temperature*10)%10));
 			TFT_Send_Str(20, 80, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 //			sprintf(tmp_str, "0x%X", (uint32_t)TDC1000_SPIRead(0x07));
 //			TFT_Send_Str(20, 110, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
-			sprintf(tmp_str, "%5d", (uint32_t)(TOF));
-			TFT_Send_Str(20, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+			
+			TOF_Stat+=TOF;
+			if(!(--TOF_Stat_ind)){
+				TOF_Stat_ind=10;
+				TOF_Stat/=10;
+				sprintf(tmp_str, "%5d", (uint32_t)TOF_Stat);
+				TFT_Send_Str(20, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+				int TOF_corr=57550; // -((uint32_t)(Temperature*10)-250)*5
+				sprintf(tmp_str, "%5d м/с", ((((int)TOF_Stat<=TOF_corr) && ((TOF_corr-(int)TOF_Stat)/10+4)<60))?((TOF_corr-(int)TOF_Stat)/10+4):0); //    64926
+				TFT_Send_Str(20, 140, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
+			}
+			
 //			sprintf(tmp_str, "0x%X", TDC1000_SPIRead(0x01)); //%5d(uint32_t)(TOF5*1000000)
 //			TFT_Send_Str(20, 200, tmp_str, strlen(tmp_str), Font_16x26, RED, YELLOW);
 			
 		}
 		else TFT_Fill_Color(YELLOW);
 	
-		
+		#endif
 		
 //		if(((data_th[0]+data_th[1]+data_th[2]+data_th[3])&0xFF)==data_th[4] && DHT22_GetData(data_th)){ // 
 //			hum=(((data_th[0])<<8)+data_th[1]); // (float) / 10
@@ -229,6 +270,7 @@ int main(void){
 
 //		TDC1000_TEMP_MEASURE_MODE_OFF;
 
+//		delay_ms(100);
 		
 	}
 }

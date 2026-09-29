@@ -390,6 +390,36 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>data.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\data.c</FilePath>
+            </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\delay.c</FilePath>
+            </File>
+            <File>
+              <FileName>dht22.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\dht22.c</FilePath>
+            </File>
+            <File>
+              <FileName>exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\exti.c</FilePath>
+            </File>
+            <File>
+              <FileName>fonts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\fonts.c</FilePath>
+            </File>
+            <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lib\src\gpio.c</FilePath>
@@ -400,14 +430,14 @@
               <FilePath>.\lib\src\rcc.c</FilePath>
             </File>
             <File>
-              <FileName>tim.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\lib\src\tim.c</FilePath>
-            </File>
-            <File>
               <FileName>spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lib\src\spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>TDC1000.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\src\TDC1000.c</FilePath>
             </File>
             <File>
               <FileName>tft.c</FileName>
@@ -415,39 +445,9 @@
               <FilePath>.\lib\src\tft.c</FilePath>
             </File>
             <File>
-              <FileName>fonts.c</FileName>
+              <FileName>tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\lib\src\fonts.c</FilePath>
-            </File>
-            <File>
-              <FileName>adc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\lib\src\adc.c</FilePath>
-            </File>
-            <File>
-              <FileName>dht22.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\lib\src\dht22.c</FilePath>
-            </File>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\lib\src\delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>data.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\lib\src\data.c</FilePath>
-            </File>
-            <File>
-              <FileName>exti.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\lib\src\exti.c</FilePath>
-            </File>
-            <File>
-              <FileName>TDC1000.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\lib\src\TDC1000.c</FilePath>
+              <FilePath>.\lib\src\tim.c</FilePath>
             </File>
           </Files>
         </Group>
